@@ -2,7 +2,7 @@
 
 iOS application showcasing the Rick and Morty API.
 
-![RickAndMortyApp](https://github.com//Bellat0/RickAndMortyApp/blob/main/RickAndMorty.png)
+![RickAndMortyApp](https://github.com/Bellat0/RickAndMortyApp/blob/main/RickAndMorty.png)
 
 ## Overview
 - Written in Swift
