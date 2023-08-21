@@ -9,14 +9,14 @@ import UIKit
 
 class CharactersList: UIViewController {
 
-    //MARK: - enum for items and sizes collection
+    //MARK: - Enum for items and sizes collection
 
     enum Layout {
         static let itemsPerRow: CGFloat = 2
         static let insets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     }
 
-    //MARK: - private properties
+    //MARK: - Private properties
 
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,7 +29,9 @@ class CharactersList: UIViewController {
 
     private let networkManager = NetworkManager()
 
-    //MARK: - lyfe cycle
+    private var characterModel: CharacterModel?
+
+    //MARK: - Lyfe cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +42,9 @@ class CharactersList: UIViewController {
         setupLayouts()
         detailsCollectionView()
 
-        networkManager.fetchCharacterData()
+        networkManager.fetchCharacterData() {[weak self] character in
+            self?.characterModel = character
+        }
     }
 
     //MARK: - private methods
@@ -72,6 +76,10 @@ class CharactersList: UIViewController {
         collectionView.register(
             CharactersCell.self,
             forCellWithReuseIdentifier: CharactersCell.ID)
+
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
 }
 
@@ -79,7 +87,7 @@ class CharactersList: UIViewController {
 
 extension CharactersList: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return characterModel?.results.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -88,7 +96,18 @@ extension CharactersList: UICollectionViewDelegate, UICollectionViewDataSource {
             for: indexPath
         ) as? CharactersCell else { return UICollectionViewCell() }
 
+        let character = characterModel?.results[indexPath.row]
+        cell.configureCell(character: character!)
+        
         return cell
+    }
+
+    //MARK: - Collection view didSelectItemAt
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let characterResult = characterModel?.results[indexPath.row]
+        let detailsVC = CharacterDetails(characterResult: characterResult!)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
 
@@ -101,7 +120,19 @@ extension CharactersList: UICollectionViewDelegateFlowLayout {
         let availableWidth = collectionView.frame.width - paddingWidth
         let widthPerItem = availableWidth/Layout.itemsPerRow
 
-        return CGSize(width: widthPerItem + 2, height: 202)
+        let character = characterModel?.results[indexPath.row]
+
+        let constraintTitleSize = CGSize(width: (widthPerItem + 2) - 16, height: CGFloat.greatestFiniteMagnitude)
+
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont(name: "Gilroy-SemiBold", size: 17)
+        titleLabel.text = character?.name
+        titleLabel.numberOfLines = 0
+
+        let labelSize = titleLabel.sizeThatFits(constraintTitleSize)
+        let itemHeight: CGFloat = 8 + 140 + 16 + labelSize.height + 16
+
+        return CGSize(width: widthPerItem + 2, height: itemHeight)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

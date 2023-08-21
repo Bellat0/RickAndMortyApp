@@ -14,4 +14,11 @@ struct CharacterModel: Codable {
 struct CharacterResult: Codable {
     let name: String
     let image: String
+    let status: Status
+}
+
+enum Status: String, Codable {
+    case alive = "Alive"
+    case dead = "Dead"
+    case unknown = "unknown"
 }

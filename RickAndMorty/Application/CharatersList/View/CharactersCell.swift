@@ -11,12 +11,13 @@ class CharactersCell: UICollectionViewCell {
 
     static let ID = "CharactersCell"
 
-    //MARK: - private properties
+    //MARK: - Private properties
 
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
+    private let activityIndicator = UIActivityIndicatorView()
 
-    //MARK: - lyfe cycle
+    //MARK: - Lyfe cycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,13 +33,14 @@ class CharactersCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: - private methods
+    //MARK: - Private methods
 
     private func setupViews() {
         contentView.addSubview(imageView)
         imageView.layer.cornerRadius = 10
         imageView.backgroundColor = .systemGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
 
         contentView.addSubview(titleLabel)
         titleLabel.font = UIFont(name: "Gilroy-SemiBold", size: 17)
@@ -47,22 +49,44 @@ class CharactersCell: UICollectionViewCell {
         titleLabel.text = "12312312 321321312"
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
+
+        contentView.addSubview(activityIndicator)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private func setupConstraints() {
         imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
 
         titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
+
+        activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
 
-    //MARK: - configure methods
+    //MARK: - Configure methods
 
-    func configureCell() {
-        
+    func configureCell(character: CharacterResult) {
+        self.activityIndicator.startAnimating()
+        self.imageView.image = nil
+        self.titleLabel.text = character.name
+
+        DispatchQueue.global().async {
+            guard
+                let url = URL(string: character.image),
+                let data = try? Data(contentsOf: url)
+            else { return }
+
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.imageView.image = UIImage(data: data)
+            }
+        }
     }
 }
