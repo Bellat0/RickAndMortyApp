@@ -49,6 +49,7 @@ class CharacterDetails: UIViewController {
         view.addSubview(tableView)
         tableView.backgroundColor = Colors.bgColor
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
     }
 
     private func setupConstraints() {
@@ -95,15 +96,17 @@ class CharacterDetails: UIViewController {
     private func fetchData() {
         networkManager.fetchLocationData { [weak self] locationData in
             self?.locationModel = locationData
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
         }
 
         networkManager.fetchEpisodeData { [weak self] episodeData in
             self?.episodesModel = episodeData
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
         }
-
-//        DispatchQueue.main.async {
-//            self.tableView.reloadData()
-//        }
     }
 }
 
