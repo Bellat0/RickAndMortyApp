@@ -23,6 +23,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         func createNavigationController() -> UINavigationController {
             let characterListVC = CharactersList()
 
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = Colors.bgColor
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+
             return UINavigationController(rootViewController: characterListVC)
         }
 

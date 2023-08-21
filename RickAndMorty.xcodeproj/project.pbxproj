@@ -11,6 +11,8 @@
 		94DEFAB62A9332510051E62F /* gilroy-semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94DEFAB32A9332510051E62F /* gilroy-semibold.ttf */; };
 		94DEFAB72A9332510051E62F /* gilroy-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94DEFAB42A9332510051E62F /* gilroy-medium.ttf */; };
 		94DEFAB92A93484F0051E62F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DEFAB82A93484F0051E62F /* Constants.swift */; };
+		94DEFABC2A9356270051E62F /* CharacterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DEFABB2A9356270051E62F /* CharacterModel.swift */; };
+		94DEFABF2A9357340051E62F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DEFABE2A9357340051E62F /* NetworkManager.swift */; };
 		94EC6C932A932A3800423B4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EC6C922A932A3800423B4D /* AppDelegate.swift */; };
 		94EC6C952A932A3800423B4D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EC6C942A932A3800423B4D /* SceneDelegate.swift */; };
 		94EC6C972A932A3800423B4D /* CharactersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EC6C962A932A3800423B4D /* CharactersList.swift */; };
@@ -25,6 +27,8 @@
 		94DEFAB32A9332510051E62F /* gilroy-semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "gilroy-semibold.ttf"; sourceTree = "<group>"; };
 		94DEFAB42A9332510051E62F /* gilroy-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "gilroy-medium.ttf"; sourceTree = "<group>"; };
 		94DEFAB82A93484F0051E62F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		94DEFABB2A9356270051E62F /* CharacterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModel.swift; sourceTree = "<group>"; };
+		94DEFABE2A9357340051E62F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		94EC6C8F2A932A3800423B4D /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94EC6C922A932A3800423B4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94EC6C942A932A3800423B4D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,6 +59,22 @@
 				94DEFAB32A9332510051E62F /* gilroy-semibold.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		94DEFABA2A9356160051E62F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				94DEFABB2A9356270051E62F /* CharacterModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		94DEFABD2A9357290051E62F /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				94DEFABE2A9357340051E62F /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
 			sourceTree = "<group>";
 		};
 		94EC6C862A932A3800423B4D = {
@@ -101,6 +121,8 @@
 		94EC6CA92A932BEE00423B4D /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				94DEFABD2A9357290051E62F /* NetworkManager */,
+				94DEFABA2A9356160051E62F /* Model */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -206,6 +228,8 @@
 			files = (
 				94DEFAB92A93484F0051E62F /* Constants.swift in Sources */,
 				94EC6C972A932A3800423B4D /* CharactersList.swift in Sources */,
+				94DEFABC2A9356270051E62F /* CharacterModel.swift in Sources */,
+				94DEFABF2A9357340051E62F /* NetworkManager.swift in Sources */,
 				94EC6C932A932A3800423B4D /* AppDelegate.swift in Sources */,
 				94EC6C952A932A3800423B4D /* SceneDelegate.swift in Sources */,
 				94EC6CAE2A932C3D00423B4D /* CharactersCell.swift in Sources */,

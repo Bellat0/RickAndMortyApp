@@ -9,6 +9,13 @@ import UIKit
 
 class CharactersList: UIViewController {
 
+    //MARK: - enum for items and sizes collection
+
+    enum Layout {
+        static let itemsPerRow: CGFloat = 2
+        static let insets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+    }
+
     //MARK: - private properties
 
     private let collectionView: UICollectionView = {
@@ -20,6 +27,8 @@ class CharactersList: UIViewController {
 
     private let titleLabel = UILabel()
 
+    private let networkManager = NetworkManager()
+
     //MARK: - lyfe cycle
 
     override func viewDidLoad() {
@@ -30,13 +39,15 @@ class CharactersList: UIViewController {
         setupViews()
         setupLayouts()
         detailsCollectionView()
+
+        networkManager.fetchCharacterData()
     }
 
     //MARK: - private methods
 
     private func setupViews() {
         view.addSubview(collectionView)
-        collectionView.backgroundColor = .cyan
+        collectionView.backgroundColor = Colors.bgColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(titleLabel)
@@ -81,3 +92,25 @@ extension CharactersList: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
+//MARK: - Collection view DelegateFlowLayout
+
+extension CharactersList: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let paddingWidth = 20 * (Layout.itemsPerRow + 1)
+        let availableWidth = collectionView.frame.width - paddingWidth
+        let widthPerItem = availableWidth/Layout.itemsPerRow
+
+        return CGSize(width: widthPerItem + 2, height: 202)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+
+        return Layout.insets
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+
+        return 14
+    }
+}
