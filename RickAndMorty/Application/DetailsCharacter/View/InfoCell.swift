@@ -59,14 +59,18 @@ class InfoCell: UITableViewCell {
         contentView.addSubview(speciesDescriptionLabel)
         speciesDescriptionLabel.text = "Human"
         speciesDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        speciesDescriptionLabel.numberOfLines = 0
 
         contentView.addSubview(typeDescriptionLabel)
         typeDescriptionLabel.text = "None"
         typeDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        typeDescriptionLabel.numberOfLines = 0
+        typeDescriptionLabel.textAlignment = .right
 
         contentView.addSubview(genderDescriptionLabel)
         genderDescriptionLabel.text = "Male"
         genderDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        genderDescriptionLabel.numberOfLines = 0
 
         for setupText in [speciesTitleLabel, typeTitleLabel, genderTitleLabel] {
             setupText.textColor = Colors.textLightGrayColor
@@ -91,18 +95,33 @@ class InfoCell: UITableViewCell {
         typeTitleLabel.topAnchor.constraint(equalTo: speciesTitleLabel.bottomAnchor, constant: 16).isActive = true
         typeTitleLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 16).isActive = true
 
-        genderTitleLabel.topAnchor.constraint(equalTo: typeTitleLabel.bottomAnchor, constant: 16).isActive = true
-        genderTitleLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 16).isActive = true
-        genderTitleLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -16).isActive = true
-
         speciesDescriptionLabel.topAnchor.constraint(equalTo: rectView.topAnchor, constant: 16).isActive = true
         speciesDescriptionLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -16).isActive = true
 
         typeDescriptionLabel.topAnchor.constraint(equalTo: speciesTitleLabel.bottomAnchor, constant: 16).isActive = true
         typeDescriptionLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -16).isActive = true
+        typeDescriptionLabel.leadingAnchor.constraint(equalTo: typeTitleLabel.trailingAnchor, constant: 50).isActive = true
 
-        genderDescriptionLabel.topAnchor.constraint(equalTo: typeTitleLabel.bottomAnchor, constant: 16).isActive = true
+        genderTitleLabel.topAnchor.constraint(equalTo: typeDescriptionLabel.bottomAnchor, constant: 16).isActive = true
+        genderTitleLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 16).isActive = true
+        genderTitleLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -16).isActive = true
+
+        genderDescriptionLabel.topAnchor.constraint(equalTo: typeDescriptionLabel.bottomAnchor, constant: 16).isActive = true
         genderDescriptionLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -16).isActive = true
         genderDescriptionLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -16).isActive = true
+    }
+
+    //MARK: - Configure methods
+
+    func configureCell(character: CharacterResult) {
+        self.speciesDescriptionLabel.text = character.species.rawValue
+
+        if character.type == "" {
+            self.typeDescriptionLabel.text = "None"
+        } else {
+            self.typeDescriptionLabel.text = character.type
+        }
+
+        self.genderDescriptionLabel.text = character.gender.rawValue
     }
 }

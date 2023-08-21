@@ -12,13 +12,28 @@ struct CharacterModel: Codable {
 }
 
 struct CharacterResult: Codable {
+    let id: Int
     let name: String
     let image: String
     let status: Status
+    let species: Species
+    let type: String
+    let gender: Gender
 }
 
 enum Status: String, Codable {
     case alive = "Alive"
     case dead = "Dead"
+    case unknown = "unknown"
+}
+
+enum Species: String, Codable {
+    case alien = "Alien"
+    case human = "Human"
+}
+
+enum Gender: String, Codable {
+    case female = "Female"
+    case male = "Male"
     case unknown = "unknown"
 }

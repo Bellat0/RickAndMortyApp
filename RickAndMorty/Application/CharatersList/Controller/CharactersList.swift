@@ -42,9 +42,7 @@ class CharactersList: UIViewController {
         setupLayouts()
         detailsCollectionView()
 
-        networkManager.fetchCharacterData() {[weak self] character in
-            self?.characterModel = character
-        }
+        fetchData()
     }
 
     //MARK: - private methods
@@ -79,6 +77,15 @@ class CharactersList: UIViewController {
 
         DispatchQueue.main.async {
             self.collectionView.reloadData()
+        }
+    }
+
+    private func fetchData() {
+        networkManager.fetchCharacterData() {[weak self] character in
+            self?.characterModel = character
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
         }
     }
 }
