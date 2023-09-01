@@ -9,11 +9,15 @@ import Foundation
 
 class NetworkManager {
 
+    //MARK: - URL strings
+
     let urlStringCharacters = "https://rickandmortyapi.com/api/character"
     let urlStringLocation = "https://rickandmortyapi.com/api/location"
     let urlStringEpisodes = "https://rickandmortyapi.com/api/episode"
 
     let decoder = JSONDecoder()
+
+    //MARK: - Network methods
 
     func fetchCharacterData(completion: @escaping (_ characterData: CharacterModel) -> Void) {
 

@@ -21,6 +21,7 @@ class CharacterDetails: UIViewController {
     private var characterResult: CharacterResult
     private var locationModel: LocationModel?
     private var episodesModel: EpisodeModel?
+    
 
     //MARK: - Lyfe cycle
 
@@ -50,6 +51,20 @@ class CharacterDetails: UIViewController {
         tableView.backgroundColor = Colors.bgColor
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
+
+        let backButton = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.backward"),
+            style: .done,
+            target: self,
+            action: #selector(backButtonTapped))
+        
+        navigationItem.leftBarButtonItem = backButton
+        backButton.tintColor = .white
+
+        let swipeBackGesture = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(backButtonTapped))
+        view.addGestureRecognizer(swipeBackGesture)
     }
 
     private func setupConstraints() {
@@ -62,6 +77,7 @@ class CharacterDetails: UIViewController {
     private func detailsTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+
         tableView.tableHeaderView = tableHeaderView
         tableHeaderView.configureCell(character: characterResult)
 
@@ -82,16 +98,13 @@ class CharacterDetails: UIViewController {
             forCellReuseIdentifier: EpisodesCell.ID)
     }
 
-    func filteredEpisodes() -> [EpisodesResult] {
-        let episodes = episodesModel?.results.filter({ episode in
-            episode.characters.contains { characterString in
-                characterString.hasSuffix("\(characterResult.id)")
-            }
-        })
+    //MARK: - Action methods
 
-        return episodes ?? []
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 
+    //MARK: - Network methods
 
     private func fetchData() {
         networkManager.fetchLocationData { [weak self] locationData in
@@ -107,6 +120,18 @@ class CharacterDetails: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+    }
+
+    //MARK: - Private calculation methods
+
+    func filteredEpisodes() -> [EpisodesResult] {
+        let episodes = episodesModel?.results.filter({ episode in
+            episode.characters.contains { characterString in
+                characterString.hasSuffix("\(characterResult.id)")
+            }
+        })
+
+        return episodes ?? []
     }
 }
 
@@ -157,8 +182,10 @@ extension CharacterDetails: UITableViewDelegate, UITableViewDataSource {
                 cell.configureCell(location: location)
             } else {
                 print("")
-            } 
+            }
+
             return cell
+
         } else if indexPath.section == 2 {
 
             guard let cell = tableView.dequeueReusableCell(
@@ -168,7 +195,6 @@ extension CharacterDetails: UITableViewDelegate, UITableViewDataSource {
 
 
             let newEpisodes = filteredEpisodes()
-
             let episode = newEpisodes[indexPath.row]
 
             cell.configureCell(episodes: episode)
