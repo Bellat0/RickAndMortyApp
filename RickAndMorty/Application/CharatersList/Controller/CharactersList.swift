@@ -25,63 +25,65 @@ class CharactersList: UIViewController {
         return vc
     }()
 
-    private let titleLabel = UILabel()
+    //MARK: - Внешние зависимости
 
-    private let networkManager = NetworkManager()
+    var dataFetcher = DataFetcherService()
+    var characterModel: CharacterModel?
 
-    private var characterModel: CharacterModel?
-
-    //MARK: - Lyfe cycle
+    //MARK: - View lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = Colors.bgColor
+        collectionView.backgroundColor = Colors.bgColor
 
         setupViews()
         setupLayouts()
-        detailsCollectionView()
+        setupCollectionView()
+        createTitleLabel()
 
         fetchData()
     }
 
     //MARK: - private methods
 
-    private func setupViews() {
-        view.addSubview(collectionView)
-        collectionView.backgroundColor = Colors.bgColor
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(titleLabel)
-        titleLabel.text = " Characters"
-        titleLabel.font = UIFont(name: "", size: 27)
+    private func createTitleLabel() {
+        let titleLabel = UILabel()
         titleLabel.textColor = .white
-        titleLabel.font = UIFont(name: "Gilroy-Bold", size: 28)
+        titleLabel.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        titleLabel.text = " Characters"
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
     }
 
-    private func setupLayouts() {
-        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    private func setupViews() {
+        view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    private func detailsCollectionView() {
+    private func setupLayouts() {
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 31),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
 
         collectionView.register(
             CharactersCell.self,
             forCellWithReuseIdentifier: CharactersCell.ID)
-
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
     }
 
+    //MARK: - Networking
+
     private func fetchData() {
-        networkManager.fetchCharacterData() {[weak self] character in
+        dataFetcher.fetchUserData { [weak self] character in
             self?.characterModel = character
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
@@ -149,6 +151,6 @@ extension CharactersList: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 
-        return 14
+        return Layout.insets.bottom - 4
     }
 }

@@ -11,22 +11,28 @@ class CharacterDetails: UIViewController {
 
     //MARK: - Private properties
 
-    private let tableView = UITableView()
-    private let tableHeaderView = TableHeaderView(
-        frame: CGRect(x: 0, y: 0, width: 161,
-                      height: 16 + 148 + 24 + 22 + 8 + 24 + 16))
+    let tableView = UITableView()
 
-    private let networkManager = NetworkManager()
+    private lazy var tableHeaderView: TableHeaderView = {
+        let headerHeight = heightForHeader()
+        let headerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: heightForHeader())
 
-    private var characterResult: CharacterResult
-    private var locationModel: LocationModel?
-    private var episodesModel: EpisodeModel?
+        return TableHeaderView(frame: headerFrame)
+    }()
+
+    //MARK: - Внешние зависимости
+
+    var dataFetcher = DataFetcherService()
+
+    var characterData: CharacterResult
+    var locationData: LocationModel?
+    var episodeData: EpisodeModel?
     
 
-    //MARK: - Lyfe cycle
+    //MARK: - View lifecycle
 
     init(characterResult: CharacterResult) {
-        self.characterResult = characterResult
+        self.characterData = characterResult
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,28 +44,27 @@ class CharacterDetails: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.backgroundColor = Colors.bgColor
+
         setupViews()
         setupConstraints()
-        detailsTableView()
+        setupTableView()
+        createBackButton()
+
         fetchData()
     }
 
     //MARK: - Private methods
 
-    private func setupViews() {
-        view.addSubview(tableView)
-        tableView.backgroundColor = Colors.bgColor
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
-
+    private func createBackButton() {
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "chevron.backward"),
             style: .done,
             target: self,
             action: #selector(backButtonTapped))
-        
-        navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .white
+
+        navigationItem.leftBarButtonItem = backButton
 
         let swipeBackGesture = UISwipeGestureRecognizer(
             target: self,
@@ -67,19 +72,26 @@ class CharacterDetails: UIViewController {
         view.addGestureRecognizer(swipeBackGesture)
     }
 
-    private func setupConstraints() {
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    private func setupViews() {
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    private func detailsTableView() {
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
 
         tableView.tableHeaderView = tableHeaderView
-        tableHeaderView.configureCell(character: characterResult)
+        tableHeaderView.configureCell(character: characterData)
 
         tableView.register(
             TableHeaderSectionView.self,
@@ -107,31 +119,19 @@ class CharacterDetails: UIViewController {
     //MARK: - Network methods
 
     private func fetchData() {
-        networkManager.fetchLocationData { [weak self] locationData in
-            self?.locationModel = locationData
+        dataFetcher.fetchLocationData { [weak self] locationInfo in
+            self?.locationData = locationInfo
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
         }
 
-        networkManager.fetchEpisodeData { [weak self] episodeData in
-            self?.episodesModel = episodeData
+        dataFetcher.fetchEpisodeData { [weak self] episodeData in
+            self?.episodeData = episodeData
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
         }
-    }
-
-    //MARK: - Private calculation methods
-
-    func filteredEpisodes() -> [EpisodesResult] {
-        let episodes = episodesModel?.results.filter({ episode in
-            episode.characters.contains { characterString in
-                characterString.hasSuffix("\(characterResult.id)")
-            }
-        })
-
-        return episodes ?? []
     }
 }
 
@@ -157,26 +157,25 @@ extension CharacterDetails: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+
+        switch indexPath.section {
+        case 0:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: InfoCell.ID,
                 for: indexPath
             ) as? InfoCell else { return UITableViewCell() }
 
-            cell.configureCell(character: characterResult)
+            cell.configureCell(character: characterData)
+
             return cell
 
-        } else if indexPath.section == 1 {
+        case 1:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: OriginCell.ID,
                 for: indexPath
             ) as? OriginCell else { return UITableViewCell() }
 
-            let location = locationModel?.results.first(where: { locationResult in
-                locationResult.residents.contains { resident in
-                    resident.hasSuffix("\(characterResult.id)")
-                }
-            })
+            let location = filteredLocation()
 
             if let location = location {
                 cell.configureCell(location: location)
@@ -186,8 +185,7 @@ extension CharacterDetails: UITableViewDelegate, UITableViewDataSource {
 
             return cell
 
-        } else if indexPath.section == 2 {
-
+        case 2:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: EpisodesCell.ID,
                 for: indexPath
@@ -199,8 +197,9 @@ extension CharacterDetails: UITableViewDelegate, UITableViewDataSource {
 
             cell.configureCell(episodes: episode)
 
-
             return cell
+
+        default: break
         }
 
         return UITableViewCell()

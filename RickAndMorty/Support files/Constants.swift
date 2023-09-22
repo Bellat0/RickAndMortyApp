@@ -7,10 +7,17 @@
 
 import UIKit
 
-enum Colors {
-    static let bgColor = UIColor(red: 3/255, green: 12/255, blue: 30/255, alpha: 1)
-    static let rectViewColor = UIColor(red: 38/255, green: 42/255, blue: 56/255, alpha: 1)
-    static let textGreenColor = UIColor(red: 72/255, green: 198/255, blue: 12/255, alpha: 1)
-    static let textLightGrayColor = UIColor(red: 177/255, green: 181/255, blue: 187/255, alpha: 1)
-    static let textGrayColor = UIColor(red: 140/255, green: 145/255, blue: 151/255, alpha: 1)
+extension UIColor {
+    static func rgb(r: CGFloat, g: CGFloat, b: CGFloat) -> UIColor {
+        return UIColor(red: r/255, green: g/255, blue: b/255, alpha: 1)
+    }
 }
+
+enum Colors {
+    static let bgColor = UIColor.rgb(r: 3, g: 12, b: 30)
+    static let rectViewColor = UIColor.rgb(r: 38, g: 42, b: 56)
+    static let textGreenColor = UIColor.rgb(r: 72, g: 198, b: 12)
+    static let textLightGrayColor = UIColor.rgb(r: 177, g: 181, b: 187)
+    static let textGrayColor = UIColor.rgb(r: 140, g: 145, b: 151)
+}
+

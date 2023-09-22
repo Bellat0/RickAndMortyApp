@@ -73,19 +73,20 @@ class CharactersCell: UICollectionViewCell {
     //MARK: - Configure methods
 
     func configureCell(character: CharacterResult) {
-        self.activityIndicator.startAnimating()
         self.imageView.image = nil
+
+        self.activityIndicator.startAnimating()
         self.titleLabel.text = character.name
 
         DispatchQueue.global().async {
             guard
-                let url = URL(string: character.image),
-                let data = try? Data(contentsOf: url)
+                let imageUrl = URL(string: character.image),
+                let imageData = try? Data(contentsOf: imageUrl)
             else { return }
 
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
-                self.imageView.image = UIImage(data: data)
+                self.imageView.image = UIImage(data: imageData)
             }
         }
     }
