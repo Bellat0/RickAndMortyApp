@@ -20,18 +20,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.makeKeyAndVisible()
 
-        func createNavigationController() -> UINavigationController {
+        func createCharactersListviewController() -> UINavigationController {
             let characterListVC = CharactersList()
 
             let appearance = UINavigationBarAppearance()
             appearance.backgroundColor = Colors.bgColor
+            appearance.shadowColor = .clear
             UINavigationBar.appearance().standardAppearance = appearance
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
 
-            return UINavigationController(rootViewController: characterListVC)
+            let navigationController = UINavigationController(rootViewController: characterListVC)
+            navigationController.navigationBar.tintColor = .white
+
+            return navigationController
         }
 
-        window?.rootViewController = createNavigationController()
+        window?.rootViewController = createCharactersListviewController()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -5,9 +5,9 @@ iOS application showcasing the Rick and Morty API.
 ![RickAndMortyApp](https://github.com/Bellat0/RickAndMortyApp/blob/main/RickAndMorty.png)
 
 ## Overview
-- Written in Swift
-- Used UIKit
-- Designed with MVC pattern
+- Swift
+- UIKit
+- MVVM
 - No External Dependencies
 - Auto layout Based
 - Built in Xcode 14

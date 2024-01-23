@@ -7,21 +7,19 @@
 
 import UIKit
 
-class TableHeaderSectionView: UITableViewHeaderFooterView {
+class CharacterDetailHeaderSectionView: UITableViewHeaderFooterView {
 
     static let ID = "TableHeaderSectionView"
 
-    //MARK: - Private properties
+    // MARK: - Properties
 
     private let titleLabel = UILabel()
 
-    //MARK: - Lyfe cycle
+    // MARK: - Init
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
 
-        contentView.backgroundColor = Colors.bgColor
-        
         setupViews()
         setupConstraints()
     }
@@ -30,9 +28,11 @@ class TableHeaderSectionView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: - Private methods
+    // MARK: - Methods
 
     private func setupViews() {
+        contentView.backgroundColor = Colors.bgColor
+
         contentView.addSubview(titleLabel)
         titleLabel.font = UIFont(name: "Gilroy-SemiBold", size: 17)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +43,7 @@ class TableHeaderSectionView: UITableViewHeaderFooterView {
         titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24).isActive = true
     }
 
-    //MARK: - Configure methods
+    // MARK: - Configure
 
     func configureTitle(title: String) {
         self.titleLabel.text = title

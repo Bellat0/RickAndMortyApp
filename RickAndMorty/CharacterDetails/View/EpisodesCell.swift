@@ -11,19 +11,17 @@ class EpisodesCell: UITableViewCell {
 
     static let ID = "EpisodesCell"
 
-    //MARK: - Private properties
+    // MARK: - Properties
 
     private let rectView = UIView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let dateLabel = UILabel()
 
-    //MARK: - Lyfe cycle
+    // MARK: - Lifecycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        contentView.backgroundColor = Colors.bgColor
 
         setupViews()
         setupConstraints()
@@ -33,9 +31,11 @@ class EpisodesCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: - Private methods
+    // MARK: - Methods
 
     private func setupViews() {
+        contentView.backgroundColor = Colors.bgColor
+
         contentView.addSubview(rectView)
         rectView.backgroundColor = Colors.rectViewColor
         rectView.layer.cornerRadius = 16
@@ -62,29 +62,35 @@ class EpisodesCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        rectView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        rectView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24).isActive = true
-        rectView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24).isActive = true
-        rectView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        NSLayoutConstraint.activate([
+            rectView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            rectView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            rectView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            rectView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
 
-        titleLabel.topAnchor.constraint(equalTo: rectView.topAnchor, constant: 16).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 15.25).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -15.25).isActive = true
+            titleLabel.topAnchor.constraint(equalTo: rectView.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 15.25),
+            titleLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -15.25),
 
-        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 15.25).isActive = true
-        descriptionLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -14).isActive = true
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: rectView.leadingAnchor, constant: 15.25),
+            descriptionLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -14),
 
-        dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
-        dateLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -15.68).isActive = true
-        dateLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -14).isActive = true
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            dateLabel.trailingAnchor.constraint(equalTo: rectView.trailingAnchor, constant: -15.68),
+            dateLabel.bottomAnchor.constraint(equalTo: rectView.bottomAnchor, constant: -14),
+        ])
     }
 
-    //MARK: - Configure methods
+    // MARK: - Configure
 
-    func configureCell(episodes: EpisodesResult) {
-        self.titleLabel.text = episodes.name
-        self.descriptionLabel.text = episodes.episode
-        self.dateLabel.text = episodes.created
+    func configure(dataSource: EpisodesCellViewModelProtocol?) {
+        if let dataSource {
+            titleLabel.text = dataSource.name
+            descriptionLabel.text = dataSource.episode
+            dateLabel.text = dataSource.airDate
+        } else {
+            print("Some error!!!!111")
+        }
     }
 }

@@ -11,19 +11,16 @@ class CharactersCell: UICollectionViewCell {
 
     static let ID = "CharactersCell"
 
-    //MARK: - Private properties
+    // MARK: - Properties
 
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private let activityIndicator = UIActivityIndicatorView()
 
-    //MARK: - Lyfe cycle
+    // MARK: - Lifecycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        contentView.layer.cornerRadius = 16
-        contentView.backgroundColor = Colors.rectViewColor
 
         setupViews()
         setupConstraints()
@@ -33,9 +30,12 @@ class CharactersCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: - Private methods
+    // MARK: - Methods
 
     private func setupViews() {
+        contentView.layer.cornerRadius = 16
+        contentView.backgroundColor = Colors.rectViewColor
+        
         contentView.addSubview(imageView)
         imageView.layer.cornerRadius = 10
         imageView.backgroundColor = .systemGray
@@ -46,7 +46,6 @@ class CharactersCell: UICollectionViewCell {
         titleLabel.font = UIFont(name: "Gilroy-SemiBold", size: 17)
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "12312312 321321312"
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
 
@@ -56,31 +55,33 @@ class CharactersCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalToConstant: 140),
 
-        titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
 
-        activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
+            activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+        ])
     }
 
-    //MARK: - Configure methods
+    // MARK: - Configure
 
-    func configureCell(character: CharacterResult) {
+    func configure(dataSource: CharactersCellViewModelProtocol) {
         self.imageView.image = nil
 
         self.activityIndicator.startAnimating()
-        self.titleLabel.text = character.name
+        self.titleLabel.text = dataSource.name
 
         DispatchQueue.global().async {
             guard
-                let imageUrl = URL(string: character.image),
+                let imageUrl = URL(string: dataSource.image),
                 let imageData = try? Data(contentsOf: imageUrl)
             else { return }
 

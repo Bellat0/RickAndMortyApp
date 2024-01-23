@@ -14,7 +14,14 @@ struct EpisodeModel: Codable {
 struct EpisodesResult: Codable {
     let id: Int
     let name: String
-    let episode: String
-    let created: String
+    let airDate: String
     let characters: [String]
+    let episode: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case airDate = "air_date"
+        case characters
+        case episode
+    }
 }
