@@ -80,10 +80,7 @@ class CharactersCell: UICollectionViewCell {
         self.titleLabel.text = dataSource.name
 
         DispatchQueue.global().async {
-            guard
-                let imageUrl = URL(string: dataSource.image),
-                let imageData = try? Data(contentsOf: imageUrl)
-            else { return }
+            guard let imageData = try? Data(contentsOf: dataSource.image) else { return }
 
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()

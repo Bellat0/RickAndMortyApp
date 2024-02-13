@@ -105,10 +105,7 @@ class CharacterDetailHeaderView: UIView {
         self.statusLabel.text = dataSource.status
 
         DispatchQueue.global().async {
-            guard
-                let url = URL(string: dataSource.image),
-                let data = try? Data(contentsOf: url)
-            else { return }
+            guard let data = try? Data(contentsOf: dataSource.image) else { return }
 
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()

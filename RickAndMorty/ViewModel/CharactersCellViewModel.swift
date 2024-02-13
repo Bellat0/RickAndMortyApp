@@ -10,7 +10,7 @@ import Foundation
 class CharactersCellViewModel: CharactersCellViewModelProtocol {
     var id: Int
     var name: String
-    var image: String
+    var image: URL
     var status: String
     var species: String
     var type: String

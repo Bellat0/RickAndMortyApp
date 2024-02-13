@@ -14,7 +14,7 @@ struct CharacterModel: Codable {
 struct CharacterResult: Codable {
     let id: Int
     let name: String
-    let image: String
+    let image: URL
     let status: Status
     let species: Species
     let type: String
